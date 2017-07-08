@@ -444,12 +444,6 @@ ans.70select s.comm,s.sname,c.cname,c.city from salespeople s,customer c where c
 select * from salespeople s where city !=Any (select city from customer c where s.snum=c.snum )
 ---------------------------------------------------------------------------------------------------------------------------------
  
-72. Write a query using the EXISTS operator that selects all salespeople with customers located in their cities who are not assigned to them.
- 
-select s.snum as SNUM, s.sname, c.cname, c.cnum as CSNUM, s.city as Scity, c.city as CCity  from salespeople s, customer c where exists (select * from customer cc where s.city=cc.city) and s.snum!=c.snum and s.city=c.city
-
----------------------------------------------------------------------------------------------------------------------------------
- 
 73. Write a query that selects all customers serviced by Peel or Motika. (Hint : The SNUM field
 relates the two tables to one another.)
  
@@ -523,11 +517,6 @@ select avg(comm) from salespeople where city='London'
  
 ---------------------------------------------------------------------------------------------------------------------------------
 
-84. Find all orders credited to the same salesperson who services Hoffman (CNUM 2001).
-
-select o.* from orders o where o.cnum in (select cnum from customer where snum=(select snum from customer where cname='Hoffman') )
- 
----------------------------------------------------------------------------------------------------------------------------------
 
 85. Find all salespeople whose commission is in between 0.10 and 0.12 (both inclusive).
 select * from salespeople where comm between 0.10 and 0.12
@@ -540,27 +529,6 @@ select * from salespeople where comm > .10  and city='London'
 
 ---------------------------------------------------------------------------------------------------------------------------------
 
-87. What will be the output from the following query?
-SELECT * FROM ORDERS
-where (amt < 1000 OR NOT (odate = 10/03/1996 AND cnum >
-2003));
- 
-All records from order except date is 03-oct 1990 with cnum >2003 or orders
-where amt is less then 1000
- 
-# onum, amt, odate, cnum
-3001, 18.69, 1996-03-10, 2008
-3002, 1900.10, 1996-03-10, 2007
-3003, 767.19, 1996-03-10, 2001
-3005, 5160.45, 1996-03-10, 2003
-3006, 1098.16, 1996-03-10, 2008
-3007, 75.75, 1996-04-10, 2002
-3008, 4723.00, 1996-05-10, 2006
-3009, 1713.23, 1996-04-10, 2002
-3010, 1309.95, 1996-06-10, 2004
-3011, 9891.88, 1996-06-10, 2006
- 
----------------------------------------------------------------------------------------------------------------------------------
 
 88. Write a query that selects each customer’s smallest order.
 
@@ -594,19 +562,7 @@ Note :- Above query will not run as SNUM doesn’t exist in ORDERS table
 Select * from customer where city!='San Jose' and rating > 200
 ---------------------------------------------------------------------------------------------------------------------------------
  
-94. Give a simpler way to write this query :
-SELECT snum, sname city, comm FROM salespeople
-WHERE (comm > + 0.12 OR comm < 0.14);
----------------------------------------------------------------------------------------------------------------------------------
- 
-95. Evaluate the following query :
-SELECT * FROM orders
-WHERE NOT ((odate = 10/03/96 AND snum > 1002) OR amt > 2000.00);
- 
-Error Code: 1054. Unknown column 'snum' in 'where clause'      0.000 sec
 
----------------------------------------------------------------------------------------------------------------------------------
- 
 96. Which salespersons attend to customers not in the city they have been assigned to?
  
 select s.sname, s.city as Salesperson_City, c.cname, c.city as Customer_city  from salespeople s, customer c where s.snum=c.snum and s.city!=c.city
@@ -624,10 +580,7 @@ percentages?
 select s1.sname,s1.city, s1.comm, s2.sname, s2.city, s2.comm from salespeople s1, salespeople s2 where s1.city=s2.city and s1.snum!=s2.snum and s1.comm!=s2.comm
 
 ---------------------------------------------------------------------------------------------------------------------------------
- 
-99. Which salesperson has earned the most by way of commission?
- 
-select a.snum, a.sname, max(a.Commission) from (select s.snum,s.sname, s.comm*(sum(o.amt)) as Commission from salespeople s, customer c, orders o where s.snum=c.snum and c.cnum = o.cnum group by s.snum) a
+
  
 100.Does the customer who has placed the maximum number of orders have the maximum rating?
 ---------------------------------------------------------------------------------------------------------------------------------
@@ -761,16 +714,7 @@ select (sum(a.amt)*(c.com))*5 as comm_paid from orders a,customer b,salespeople 
 123.Which is the date, order number, amt and city for each salesperson (by name) for the
 maximum order he has obtained?
 
- ---------------------------------------------------------------------------------------------------------------------------------
 
-124.Which salesperson(s) should be fired?
-
----------------------------------------------------------------------------------------------------------------------------------
- 
-125.What is the total income for the company?
- 
----------------------------------------------------------------------------------------------------------------------------------
- 
 
 
 
