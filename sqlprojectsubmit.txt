@@ -23,6 +23,8 @@ mysql> select * from salespeople;
 | 2007 | Pereira   | Rome     |    100 | 1004 |
 | 2008 |  Cisneros | SAN JOSE |    300 | 1007 |
 +------+-----------+----------+--------+------+
+ load data infile 'orders' into table orders fields terminated by '|' lines terminated by '\n';
+
 
 mysql> select * from orders;
 +------+---------+------------+------+
