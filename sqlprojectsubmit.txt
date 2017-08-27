@@ -230,67 +230,189 @@ maximum order he has obtained?
 124.Which salesperson(s) should be fired?
 125.What is the total income for the company?
 ans 
-ans 1.select * from salespeople;
+1)select * from salespeople;
+
 ans 2. select cname,rating from customer where rating ='100';
-ans 3.select * from customers where city ='null';
-ans 4.select o.onum,max(o.amt),o.odate,c.snum from customer c,orders o group by c.snum,o.odate;
-ans 5.select * from orders order by cnum DESC;
-ans 6 select c.snum,o.odate from orders o,customer c order by c.snum;
-ans 7 select c.cname,c.snum from customer c order by c.snum;
-ans8.select s.snum,s.sname,c.cname from salespeople s join customer c where s.snum=c.snum;
-ans 9. select count(o.onum),s.snum from salespeople s,customer c,orders o where o.cnum=c.cnum and c.snum=s.snum group by s.snum Desc;
+3)select * from customers where city is NULL;
+4)select o.onum,max(o.amt),o.odate,c.snum from customers c,orders o where c.cnum=o.cnum group by c.snum,o.odate;
++------+------------+------------+------+
+| onum | max(o.amt) | odate      | snum |
++------+------------+------------+------+
+| 3003 |        767 | 1996-03-10 | 1001 |
+| 3008 |       4723 | 1996-05-10 | 1001 |
+| 3011 |       9892 | 1996-06-10 | 1001 |
+| 3005 |       5160 | 1996-03-10 | 1002 |
+| 3010 |       1310 | 1996-06-10 | 1002 |
+| 3007 |       1713 | 1996-04-10 | 1003 |
+| 3002 |       1900 | 1996-03-10 | 1004 |
+| 3001 |       1098 | 1996-03-10 | 1007 |
++------+------------+------------+------+
+8 rows in set (0.00 sec)
+5)select * from orders order by cnum desc;
+6)select c.snum,o.onum from orders o,customers c where c.cnum=o.cnum
+    -> ;
++------+------+
+| snum | onum |
++------+------+
+| 1001 | 3003 |
+| 1001 | 3008 |
+| 1001 | 3011 |
+| 1002 | 3005 |
+| 1002 | 3010 |
+| 1003 | 3007 |
+| 1003 | 3009 |
+| 1004 | 3002 |
+| 1007 | 3001 |
+| 1007 | 3006 |
++------+------+
+7)select c.cname,s.sname,c.cnum from salespeople s,customers c where c.snum=s.snum;
++-----------+----------+------+
+| cname     | sname    | cnum |
++-----------+----------+------+
+| Hoffman   | PEEL     | 2001 |
+| Clemens   | PEEL     | 2006 |
+|  Liu      | serres   | 2003 |
+| Grass     | serres   | 2004 |
+| Giovanni  | Axelrod  | 2002 |
+| Pereira   | MOTIKA   | 2007 |
+| Cisneros  | RIFKIN   | 2008 |
++-----------+----------+------+
+7 rows in set (0.00 sec)
+8)select count(c.cnum),s.snum,s.sname from salespeople s,customers c where c.snum=s.snum group by s.snum having count(c.cnum)>1;
++---------------+------+----------+
+| count(c.cnum) | snum | sname    |
++---------------+------+----------+
+|             2 | 1001 | PEEL     |
+|             2 | 1002 | serres   |
++---------------+------+----------+
+2 rows in set (0.00 sec)
+9)select count(o.onum),c.snum from orders o,customers c where c.cnum=o.cnum group by c.snum order by o.onum desc;
 +---------------+------+
 | count(o.onum) | snum |
 +---------------+------+
-|             2 | 1007 |
-|             1 | 1004 |
 |             2 | 1003 |
 |             2 | 1002 |
 |             3 | 1001 |
+|             1 | 1004 |
+|             2 | 1007 |
 +---------------+------+
-5 rows in set (0.01 sec)
-ans 10.select * from customer where city='San jose';
+5 rows in set (0.00 sec)
+10)
+select count(city),cnum,city from customers where city ='SAN JOSE' group by city having count(city) >1;
++-------------+------+----------+
+| count(city) | cnum | city     |
++-------------+------+----------+
+|           2 | 2003 | SAN JOSE |
++-------------+------+----------+
+1 row in set (0.00 sec)
+11)
+select s.sname,c.cname,s.city,c.city from customers c,salespeople s where c.snum=s.snum order by sname;
++----------+-----------+------------+----------+
+| sname    | cname     | city       | city     |
++----------+-----------+------------+----------+
+| Axelrod  | Giovanni  | NEW YORK   | Rome     |
+| MOTIKA   | Pereira   | LONDON     | Rome     |
+| PEEL     | Clemens   | LONDON     | LONDON   |
+| PEEL     | Hoffman   | LONDON     | LONDON   |
+| RIFKIN   | Cisneros  | BARCELONA  | SAN JOSE |
+| serres   | Grass     | SAN JOSE   | Berlin   |
+| serres   |  Liu      | SAN JOSE   | SAN JOSE |
++----------+-----------+------------+----------+
+7 rows in set (0.00 sec)
+
+12)
+select max(o.amt),c.snum from orders o,customers c where o.cnum=c.cnum group by c.snum ;
++------------+------+
+| max(o.amt) | snum |
++------------+------+
+|       9892 | 1001 |
+|       5160 | 1002 |
+|       1713 | 1003 |
+|       1900 | 1004 |
+|       1098 | 1007 |
++------------+------+
+5 rows in set (0.00 sec)
+15)select o.onum from orders o join customers c join salespeople s where s.sname ='MOTIKA' and o.cnum=c.cnum and s.snum=c.snum   ;
++------+
+| onum |
++------+
+| 3002 |
++------+
+1 row in set (0.00 sec)
+16)
+select o.odate,c.cnum,c.cname from orders o,customers c where odate ='1996-03-10' and o.cnum=c.cnum;
++------------+------+-----------+
+| odate      | cnum | cname     |
++------------+------+-----------+
+| 1996-03-10 | 2001 | Hoffman   |
+| 1996-03-10 | 2003 |  Liu      |
+| 1996-03-10 | 2007 | Pereira   |
+| 1996-03-10 | 2008 | Cisneros  |
+| 1996-03-10 | 2008 | Cisneros  |
++------------+------+-----------+
+5 rows in set (0.00 sec)
+17)
+select sum(o.amt),o.odate from orders o group by o.odate having sum(o.amt) <(select max(amt)+2000 from orders);
++------------+------------+
+| sum(o.amt) | odate      |
++------------+------------+
+|       8944 | 1996-03-10 |
+|       1789 | 1996-04-10 |
+|       4723 | 1996-05-10 |
+|      11202 | 1996-06-10 |
++------------+------------+
+4 rows in set (0.00 sec)
+18)select * from orders where amt >ANY (select amt from orders where odate ='1996-06-10');
++------+------+------------+------+
+| onum | amt  | odate      | cnum |
++------+------+------------+------+
+| 3002 | 1900 | 1996-03-10 | 2007 |
+| 3005 | 5160 | 1996-03-10 | 2003 |
+| 3008 | 4723 | 1996-05-10 | 2006 |
+| 3009 | 1713 | 1996-04-10 | 2002 |
+| 3011 | 9892 | 1996-06-10 | 2006 |
++------+------+------------+------+
+19)select * from salespeople s where exists (select rating from customers where rating =300 and snum=s.snum);
++------+----------+------------+-------+
+| snum | sname    | city       | comm  |
++------+----------+------------+-------+
+| 1002 | serres   | SAN JOSE   | 0.13  |
+| 1007 | RIFKIN   | BARCELONA  | 0.15  |
++------+----------+------------+-------+
+2 rows in set (0.00 sec)
+20) select CONCAT(a.cname,' ',b.cname,a.rating,' ',b.rating) from customers a,customers b where a.rating=b.rating and a.cnum != b.cnum;
++---------------------------------------------------+
+| CONCAT(a.cname,' ',b.cname,a.rating,' ',b.rating) |
++---------------------------------------------------+
+| Clemens   Hoffman  100 100                        |
+| Pereira   Hoffman  100 100                        |
+|  Liu  Giovanni 200 200                            |
+| Giovanni   Liu 200 200                            |
+| Cisneros Grass300 300                             |
+| Hoffman   Clemens  100 100                        |
+| Pereira   Clemens  100 100                        |
+| Hoffman   Pereira  100 100                        |
+| Clemens   Pereira  100 100                        |
+| Grass Cisneros300 300                             |
++---------------------------------------------------+
+10 rows in set (0.00 sec)
+
+21)select * from customers where cnum >=(select snum+1000 from salespeople where sname ='serres');
 +------+-----------+----------+--------+------+
 | cnum | cname     | city     | rating | snum |
 +------+-----------+----------+--------+------+
+| 2002 | Giovanni  | Rome     |    200 | 1003 |
 | 2003 |  Liu      | SAN JOSE |    200 | 1002 |
-| 2008 |  Cisneros | SAN JOSE |    300 | 1007 |
+| 2004 | Grass     | Berlin   |    300 | 1002 |
+| 2006 | Clemens   | LONDON   |    100 | 1001 |
+| 2007 | Pereira   | Rome     |    100 | 1004 |
+| 2008 | Cisneros  | SAN JOSE |    300 | 1007 |
 +------+-----------+----------+--------+------+
-2 rows in set (0.00 sec)
-ans 11.
-select c.cnum,c.city,c.cname,s.snum,s.city,s.sname from customer c,salespeople s where s.snum=c.snum order by s.snum;
-+------+----------+-----------+------+-----------+---------+
-| cnum | city     | cname     | snum | city      | sname   |
-+------+----------+-----------+------+-----------+---------+
-| 2001 | LONDON   | Hoffman   | 1001 | LONDON    | PEEL    |
-| 2006 | LONDON   | Clemens   | 1001 | LONDON    | PEEL    |
-| 2003 | SAN JOSE |  Liu      | 1002 | SAN JOSE  | serres  |
-| 2004 | Berlin   | Grass     | 1002 | SAN JOSE  | serres  |
-| 2002 | Rome     | Giovanni  | 1003 | NEW YORK  | Axelrod |
-| 2007 | Rome     | Pereira   | 1004 | LONDON    | MOTIKA  |
-| 2008 | SAN JOSE |  Cisneros | 1007 | BARCELONA | RIFKIN  |
-+------+----------+-----------+------+-----------+---------+
-7 rows in set (0.00 sec)
+6 rows in set (0.00 sec)
 
-
-ans12.select max(o.amt),c.snum from customer c,order o group by c.snum
-ans 13select cname,rating from customer where rating >200;
-ans 14.select sname,comm from salespeople where city ='LONDON';
-ans 15. select o.onum,o.amt,o.odate from orders o,customer c,salespeople s where o.cnum=c.cnum and s.snum=c.snum and s.sname='MOTIKA';
-+------+---------+------------+
-| onum | amt     | odate      |
-+------+---------+------------+
-| 3002 | 1900.10 | 1996-03-10 |
-+------+---------+------------+
-1 row in set (0.00 sec)
-
-ans 16.select c.cnum,o.odate from customer c, orders o where o.odate ='1996-03-10' and o.cnum=c.cnum;
-ans17.select sum(amt),odate from orders where amt <(select max(amt) from orders) group by odate;
-ans 18.select amt,odate from orders where amt !=(select max(amt) from orders where odate ='1996-06-10');
-ans19.
-ans 20.select rating,cname from customer order by rating;
-ans 23.select s.snum, s.sname,max(o.amt) as MaxOrder, o.odate from salespeople s, customer c,orders o where s.snum=c.snum and c.cnum=o.cnum  group by s.snum,o.odate;
 ans 22.SELECT CONCAT(comm*100, '%') as rate_percent from salespeople;
+ans 23.select s.snum, s.sname,max(o.amt) as MaxOrder, o.odate from salespeople s, customer c,orders o where s.snum=c.snum and c.cnum=o.cnum  group by s.snum,o.odate;
+
 ans 24.select c.snum,max(o.amt),o.odate from customer c,orders o  where o.odate ='1996-03-10' group by c.snum;
 ans 26.select cname from customer where rating >200;
 ans 27.select count(c.snum) from customer c ,orders o where o.cnum=c.cnum;
