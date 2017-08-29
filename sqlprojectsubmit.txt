@@ -862,8 +862,16 @@ select * from orders where amt > (select avg(amt) from orders where odate='1996-
  
  
 114.Which customers have above average orders?
+select * from customers c where exists (select amt from orders where cnum =c.cnum and amt >(select AVG(o.amt) from orders o));
++------+-----------+----------+--------+------+
+| cnum | cname     | city     | rating | snum |
++------+-----------+----------+--------+------+
+| 2003 |  Liu      | SAN JOSE |    200 | 1002 |
+| 2006 | Clemens   | LONDON   |    100 | 1001 |
++------+-----------+----------+--------+------+
+2 rows in set (0.00 sec)
 
-select * from orders where amt > (select avg(amt) from orders)
+
 ---------------------------------------------------------------------------------------------------------------------------------
  
  
@@ -918,6 +926,17 @@ select (sum(a.amt)*(c.com))*5 as comm_paid from orders a,customer b,salespeople 
 123.Which is the date, order number, amt and city for each salesperson (by name) for the
 maximum order he has obtained?
 
+select o.odate,o.onum,o.amt,s.city ,max(o.amt) from customers c,salespeople s,orders o where s.snum=c.snum and c.cnum=o.cnum group by s.snum;
++------------+------+------+------------+------------+
+| odate      | onum | amt  | city       | max(o.amt) |
++------------+------+------+------------+------------+
+| 1996-03-10 | 3003 |  767 | LONDON     |       9892 |
+| 1996-03-10 | 3005 | 5160 | SAN JOSE   |       5160 |
+| 1996-04-10 | 3007 |   76 | NEW YORK   |       1713 |
+| 1996-03-10 | 3002 | 1900 | LONDON     |       1900 |
+| 1996-03-10 | 3001 |   19 | BARCELONA  |       1098 |
++------------+------+------+------------+------------+
+5 rows in set (0.00 sec)
 
 
 
